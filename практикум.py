@@ -17,22 +17,17 @@ class RainDrop:
         self.width = width
         self.height = height
 
-        # Случайная глубина для 3D эффекта (0 - ближние, 1 - дальние)
         self.depth = random.uniform(0.2, 1.0)
 
-        # Размер и скорость зависят от глубины
-        self.size = max(2, int(10 * self.depth))
+        self.size = max(2, int(10 * (1 - self.depth * 0.8)))
         self.speed = max(1, int(8 * (1 - self.depth * 0.5)))
 
-        # Начальная позиция
         self.x = random.randint(0, width)
         self.y = random.randint(-100, 0)
 
-        # Фиолетовый цвет с разной интенсивностью для глубины
         color_intensity = int(150 + 100 * (1 - self.depth))
         self.color = f'#{color_intensity:02x}00{color_intensity:02x}'
 
-        # Создание овальной капли
         self.id = canvas.create_oval(
             self.x, self.y,
             self.x + self.size,
@@ -44,7 +39,6 @@ class RainDrop:
         self.y += self.speed
         self.canvas.move(self.id, 0, self.speed)
 
-        # Если капля ушла за нижнюю границу, пересоздаём её сверху
         if self.y > self.height:
             self.reset()
 
@@ -63,14 +57,12 @@ class RainAnimation:
         self.root = root
         self.root.title("3D Капли с регулируемой плотностью")
 
-        # Настройки экрана
+       
         self.width = 800
         self.height = 600
 
-        # Плотность капель
         self.drop_density = 100
 
-        # Создание холста
         self.canvas = tk.Canvas(
             root,
             width=self.width,
@@ -79,18 +71,14 @@ class RainAnimation:
         )
         self.canvas.pack()
 
-        # Создание ползунка для плотности
         self.create_density_slider()
 
-        # Создание капель
         self.drops = []
         self.create_drops()
 
-        # Запуск анимации
         self.animate()
 
     def create_density_slider(self):
-        """Создает ползунок для регулировки плотности капель"""
         slider_frame = tk.Frame(self.root)
         slider_frame.pack(pady=10)
 
@@ -116,42 +104,33 @@ class RainAnimation:
         new_density = int(self.density_var.get())
         self.density_label.config(text=str(new_density))
 
-        # Обновляем плотность (изменения применятся при следующем reset() капель)
         self.drop_density = new_density
 
     def create_drops(self):
-        """Создает начальный набор капель"""
         for _ in range(self.drop_density):
             self.drops.append(RainDrop(self.canvas, self.width, self.height))
 
     def update_drops_count(self):
-        """Обновляет количество капель в соответствии с текущей плотностью"""
         current_count = len(self.drops)
 
         if current_count < self.drop_density:
-            # Нужно добавить капли
             for _ in range(self.drop_density - current_count):
                 self.drops.append(RainDrop(self.canvas, self.width, self.height))
 
         elif current_count > self.drop_density:
-            # Нужно удалить лишние капли
             for _ in range(current_count - self.drop_density):
-                if self.drops:  # Проверяем, что список не пустой
-                    drop = self.drops.pop()  # Удаляем последнюю каплю
-                    self.canvas.delete(drop.id)  # Удаляем с холста
+                if self.drops:  
+                    drop = self.drops.pop()  
+                    self.canvas.delete(drop.id)  
 
     def animate(self):
-        # Обновляем количество капель если плотность изменилась
         self.update_drops_count()
 
-        # Двигаем все капли
         for drop in self.drops:
             drop.move()
 
-        # Планируем следующий кадр
-        self.root.after(30, self.animate)
+        self.root.after(16, self.animate)
 
-# Запуск программы
 if __name__ == "__main__":
     root = tk.Tk()
     app = RainAnimation(root)

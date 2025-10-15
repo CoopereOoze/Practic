@@ -91,7 +91,6 @@ class RainAnimation:
         self.density_label.pack(side=tk.LEFT)
 
     def on_density_change(self, event=None):
-        """Обработчик изменения ползунка плотности"""
         new_density = int(self.density_var.get())
         self.density_label.config(text=str(new_density))
 

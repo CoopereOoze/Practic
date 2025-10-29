@@ -303,7 +303,7 @@ def show_statistics(message):
     text = f"Общая статистика\n\nДоходы: {income:.2f} ₽\nРасходы: {expenses:.2f} ₽\nБаланс: {income - expenses:.2f} ₽\n\nРасходы по категориям:\n"
 
     for category, amount in category_expenses.items():
-        text += f"* {category}: {amount:.2f} ₽\n"
+        text += f"• {category}: {amount:.2f} ₽\n"
 
     if category_expenses:
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
